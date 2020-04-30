@@ -1,0 +1,12 @@
+The following is required to run the tool :
+    1. Python 3+
+    2. The following python libraries are required :
+        a. Numpy
+        b. Pandas
+        c. Matplotlib
+        d. Tkinter
+
+Run the following instructions to satisfy the above mentioned requirements :
+$ sudo apt install python
+$ sudo apt install python-pip
+$ pip install numpy pandas matplotlib tk

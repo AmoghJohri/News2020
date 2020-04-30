@@ -39,12 +39,15 @@ class Root(Tk):
         value_2 = self.option_2.get()
         value_3 = self.option_3.get()
         value_4 = self.option_4.get()
-        if value == "android":
-            if self.filename == "":
-                self.popupmsg("Select A WhatsApp Text File")
-            else :
-                output_path = self.filename[:-4] + ".csv"
-                parsedData = get_data(self.filename)
+        if self.filename == "":
+            self.popupmsg("Select A WhatsApp Text File")
+        else:
+            output_path = self.filename[:-4] + ".csv"
+            if value == "android" or value == "ios":
+                if value == "android":
+                    parsedData = get_data(self.filename, 0)
+                elif value == "ios":
+                    parsedData = get_data(self.filename, 1)
                 df = pd.DataFrame(parsedData, columns=['Date', 'Time', 'Author', 'Message'])
                 df_, _ = remove_media(df)
                 if value_2 == "remove_emoji":
@@ -57,11 +60,8 @@ class Root(Tk):
                 else:
                     self.popupmsg("", "Done!")
                 df_.to_csv(output_path, index = False)
-
-        elif value == "ios":
-            print("Haven't implemented it yet!")
-        else:
-            self.popupmsg("Select The Applicable Cellphone OS (Android or IOS)")
+            else:
+                self.popupmsg("Select Your Device's Operating Framework")
 
     def radiobutton(self, option, option_2, option_3, option_4):
         self.R1 = ttk.Radiobutton(self, text="Android", value="android", var=option)
@@ -83,7 +83,7 @@ class Root(Tk):
         self.button.grid(column = 3, row = 1)   
 
     def fileDialog(self):
-        self.filename = filedialog.askopenfilename(initialdir = "/home/redhood/Desktop/CollegeWork/Semester_6/News/Assignment_2/Raw_whatsapp_data", title = "Select The Text File", filetypes = (("txt", "*.txt"), ("All Files", "*.*")))
+        self.filename = filedialog.askopenfilename(initialdir = "/", title = "Select The Text File", filetypes = (("txt", "*.txt"), ("All Files", "*.*")))
         self.label = ttk.Label(self.labelFrame, text = "")
         self.label.grid(column = 1, row = 2)
         self.label.configure()

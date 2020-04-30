@@ -6,8 +6,11 @@ import matplotlib.pyplot as plt
 # opening the WhatsApp chat exported as text in read-mode 
 # here, we shall only be dealing with data which does not contain any media
 # checking how many lines begin with a date i.e. counting the number of individual whatsapp texts
-def startsWithDateTime(s):
-    pattern = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -'
+def startsWithDateTime(s, id):
+    if id == 0:
+        pattern = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -'
+    else:
+        pattern = '(\[)([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), (([0-9][0-9])|([0-9])):([0-9][0-9]):([0-9][0-9]) (AM|PM)(\])' 
     result = re.match(pattern, s)
     if result:
         return True
@@ -43,7 +46,7 @@ def getDataPoint(line):
         author = None
     return date, time, author, message
 
-def get_data(conversationPath): 
+def get_data(conversationPath, id): 
     parsedData = []
     with open(conversationPath, encoding="utf-8") as fp:
         fp.readline() # Skipping first line of the file (usually contains information about end-to-end encryption)
@@ -56,7 +59,7 @@ def get_data(conversationPath):
             if not line: # Stop reading further if end of file has been reached
                 break
             line = line.strip() # Guarding against erroneous leading and trailing whitespaces
-            if startsWithDateTime(line): # If a line starts with a Date Time pattern, then this indicates the beginning of a new message
+            if startsWithDateTime(line, id): # If a line starts with a Date Time pattern, then this indicates the beginning of a new message
                 if len(messageBuffer) > 0: # Check if the message buffer contains characters from previous iterations
                     parsedData.append([date, time, author, ' '.join(messageBuffer)]) # Save the tokens from the previous message in parsedData
                 messageBuffer.clear() # Clear the message buffer so that it can be used for the next message
@@ -168,16 +171,4 @@ def get_statistics(df, val = 0):
 
 
 if __name__ == '__main__':
-    parsedData = get_data("path_to_input_file")
-    df = pd.DataFrame(parsedData, columns=['Date', 'Time', 'Author', 'Message'])
-
-    df_ = remove_media(df)
-
-    df_.to_csv("path_to_output_file", index = False)
-
-    author_value_counts = df_['Author'].value_counts() # Number of messages per author
-    author_value_counts.plot.pie() # Plot a bar chart using pandas built-in plotting apis
-
-    
-
-    plt.show()
+    print("Hello World! :P")
