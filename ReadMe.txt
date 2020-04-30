@@ -2,7 +2,7 @@
 => The scope of this tool is to facilitate the process of data-extraction and representation as defined by the project.
 
 How To Run : 
--> Double click on the 'run.sh' file.
+-> Double click on the 'run.sh' file or use 'python3 gui.py' in the terminal.
 
 How To Use The Tool : 
 1. The tool takes an exported WhatsApp Chat (in the form of .txt file) as its input. The 'Input Text File' option can be used to browse and select the required file.
