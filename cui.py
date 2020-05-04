@@ -8,10 +8,17 @@ import matplotlib.pyplot as plt
 # checking how many lines begin with a date i.e. counting the number of individual whatsapp texts
 def startsWithDateTime(s, id):
     if id == 0:
-        pattern = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -'
+        pattern_1 = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), ([0-9][0-9]):([0-9][0-9]) -'
+        pattern_2 = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{2}), ([0-9]):([0-9][0-9]) (am|pm) -'
+        result_1 = re.match(pattern_1, s)
+        result_2 = re.match(pattern_2, s)
+        if result_1 == None:
+            result = result_2
+        else:
+            result = result_1
     else:
         pattern = '(\[)([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)(\d{2}|\d{4}), (([0-9][0-9])|([0-9])):([0-9][0-9]):([0-9][0-9]) (AM|PM)(\])' 
-    result = re.match(pattern, s)
+        result = re.match(pattern, s)
     if result:
         return True
     return False
@@ -146,7 +153,12 @@ def get_bar(df, val = 0):
 def get_bar_time(df, val = 0):
     output = [0 for i in range(24)]
     for i in df.index:
-        time = int(df['Time'][i][0:2])
+        if (df['Time'][i])[-2] == "p":
+            time = (int(df['Time'][i][0]) + 12)%24
+        elif (df['Time'][i])[-2] == "a":
+            time = (int(df['Time'][i][0]))%24
+        else:
+            time = (int(df['Time'][i][0:2]))
         output[time%24] += 1
     top=[(i,output[i]) for i in range(24)]
     labels, ys = zip(*top)
